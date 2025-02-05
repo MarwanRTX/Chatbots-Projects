@@ -1,0 +1,200 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Shop Bot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --dark-bg: #0a0e17;
+            --chat-width: 350px;
+        }
+
+        body {
+            background: var(--dark-bg);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .chat-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 25px var(--neon-blue);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .chat-toggle:hover {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        .chat-container {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: var(--chat-width);
+            background: rgba(10, 14, 23, 0.95);
+            border-radius: 20px;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .chat-container.active {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .chat-header {
+            background: linear-gradient(45deg, #001219, #005f73);
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.4rem;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .chat-body {
+            padding: 1.5rem;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .category-btn {
+            background: transparent;
+            border: 2px solid var(--neon-purple);
+            color: var(--neon-purple);
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .category-btn:hover {
+            background: var(--neon-purple);
+            color: var(--dark-bg);
+            transform: translateX(-10px);
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        .response-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--neon-blue);
+            border-radius: 5px;
+            color: white;
+            animation: neonPulse 2s infinite;
+        }
+
+        @keyframes neonPulse {
+            0%, 100% { box-shadow: 0 0 5px var(--neon-blue); }
+            50% { box-shadow: 0 0 20px var(--neon-blue); }
+        }
+
+        .key-value-item {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-toggle" onclick="toggleChat()">💬</div>
+    
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            Fruits Bot
+        </div>
+        <div class="chat-body">
+            {% if selected_category %}
+            <div class="response-item animate__animated animate__fadeIn">
+                <h3 style="color: var(--neon-blue); margin-bottom: 1rem;">{{ selected_category }}</h3>
+                {% if response_items is mapping %}
+                    {% for key, value in response_items.items() %}
+                    <div class="key-value-item">
+                        <div style="color: var(--neon-purple)">{{ key }}:</div>
+                        <div>{{ value }}</div>
+                    </div>
+                    {% endfor %}
+                {% elif response_items is iterable and response_items is not string %}
+                    {% for item in response_items %}
+                    <div class="response-item">
+                        ✨ {{ item }}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="response-item">
+                        {{ response_items }}
+                    </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <div style="margin-top: 2rem;">
+                {% for category in categories %}
+                <form method="post">
+                    <input type="hidden" name="category" value="{{ category }}">
+                    <button type="submit" class="category-btn animate__animated animate__fadeInRight">
+                        {{ category }}
+                    </button>
+                </form>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            const chat = document.getElementById('chatContainer');
+            chat.classList.toggle('active');
+            autoScroll();
+        }
+
+        function autoScroll() {
+            const chatBody = document.querySelector('.chat-body');
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        // Auto-open chat if there's a response
+        window.onload = () => {
+            {% if selected_category %}
+            document.getElementById('chatContainer').classList.add('active');
+            {% endif %}
+            autoScroll();
+        };
+
+        // Auto-scroll when new content is added
+        new MutationObserver(autoScroll).observe(
+            document.querySelector('.chat-body'), 
+            { childList: true, subtree: true }
+        );
+    </script>
+</body>
+</html>
