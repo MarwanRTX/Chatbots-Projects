@@ -1,5 +1,4 @@
 {
-    "fruit": "Apple",
-    "size": "Large",
-    "color": "Red"
+    "Fruits Menu": ["Banana 3$","apple 5$","orange $10"],
+    "Avalible places":"123Adress"
 }
