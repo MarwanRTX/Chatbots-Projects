@@ -1,4 +1,4 @@
-# Fruit-Shop-Bot :sparkles:
+# ChatBot :sparkles:
 
 ![NeonShopBot Demo](https://raw.githubusercontent.com/MarwanRTX/Chatbots-Projects/main/chatbotgif.gif)
 *A dynamic chatbot interface for modern businesses*
@@ -94,6 +94,6 @@ git push origin feature/AmazingFeature
 5. Open a Pull Request
 
 ## ✉️ Contact
-Marwan - [@](https://www.linkedin.com/in/marwan-mostafa-712192212/) - marwan.d.2008@gmail.com
+Marwan - (https://www.linkedin.com/in/marwan-mostafa-712192212/) - marwan.d.2008@gmail.com
 
 Project Link: [https://github.com/MarwanRTX/Chatbots-Projects](https://github.com/yourusername/NeonShopBot)
